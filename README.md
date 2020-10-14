@@ -20,10 +20,10 @@ Array indexing has an algorithmic complexity of O(1) at average expectency. A no
 
 Key-value pairs will be stored in a structure as follows:
 
-'''cpp
-//Key-value pairs/items will be stored in a structure.
-typedef struct ht_item {
-	char* key; // a list of characters: keys
-	char* value; // a list of characters: value
-};
-'''
+```cpp
+int main() {
+  int y = SOME_MACRO_REFERENCE;
+  int x = 5 + 6;
+  cout << "Hello World! " << x << std::endl();
+}
+```
