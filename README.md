@@ -1,6 +1,34 @@
 # Creating-Hash-Table-In-C++
 A guide on implementing a Hash Table using C++
 
+# Usage
+
+
+```cpp
+# include <iostream>
+
+#include "hash.h"
+
+int main() 
+{
+	ht_hash_table* ht = ht_new();
+
+	hash_insert(ht, "a", "password11");
+	hash_insert(ht, "b", "password22");
+	//hash_insert(ht, "c", "password33");
+
+
+	char* val = hash_search(ht, "a");
+
+	std::cout << val << std::endl;
+
+
+	system("pause");
+	return 0;
+};
+```
+
+
 
 # Hash Tables
 
@@ -284,3 +312,50 @@ void hash_delete(ht_hash_table* ht, const char* key)
 
 Same as before, but instead we set the items at the index given by the hash function to HT_DELETED_ITEM = {NULL, NULL}.
 
+# Resizing
+
+```cpp
+static void ht_resize(ht_hash_table* ht, const int base_size) 
+{
+	if (base_size < HT_INITIAL_BASE_SIZE) 
+	{
+		return;
+	}
+	ht_hash_table* new_ht = ht_new_sized(base_size);
+	for (int i = 0; i < ht->size; i++) 
+	{
+		ht_item* item = ht->items[i];
+		if (item != NULL && item != &HT_DELETED_ITEM) 
+		{
+			hash_insert(new_ht, item->key, item->value);
+		}
+	}
+
+	ht->base_size = new_ht->base_size;
+	ht->count = new_ht->count;
+
+	// To delete new_ht, we give it ht's size and items 
+	const int tmp_size = ht->size;
+	ht->size = new_ht->size;
+	new_ht->size = tmp_size;
+
+	ht_item** tmp_items = ht->items;
+	ht->items = new_ht->items;
+	new_ht->items = tmp_items;
+
+	ht_del_hash_table(new_ht);
+}
+
+static void ht_resize_up(ht_hash_table* ht) 
+{
+	const int new_size = ht->base_size * 2;
+	ht_resize(ht, new_size);
+}
+
+
+static void ht_resize_down(ht_hash_table* ht) 
+{
+	const int new_size = ht->base_size / 2;
+	ht_resize(ht, new_size);
+}
+```
